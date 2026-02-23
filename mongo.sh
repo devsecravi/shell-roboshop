@@ -11,7 +11,7 @@ fi
 
 validate(){
 
-     if [ $1 -nq 0 ]; then 
+     if [ $1 -ne 0 ]; then 
         echo "$2...FAILURE"
     else
         echo "$2....SUCCESS"
