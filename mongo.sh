@@ -4,7 +4,7 @@ USERID=$(id -u)
 FILE_FOLDER="/var/log/shell-roboshop"
 FILE_LOG="$FILE_FOLDER/$0.sh"
 
-if [ $USERID -nq 0 ]; then
+if [ $USERID -ne 0 ]; then
     echo "Package Installation with Super Root User $USERID"
     exit 1
 fi
