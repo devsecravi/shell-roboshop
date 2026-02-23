@@ -1,14 +1,14 @@
 #!/bin/bash
 
 USERID=$(id -u)
-FILE_FOLDER="/var/log/shell-roboshop"
-FILE_LOG="$FILE_FOLDER/$0.log"
+LOG_FOLDER="/var/log/shell-roboshop"
+LOG_FILE="$FILE_FOLDER/$0.log"
 
 if [ $USERID -ne 0 ]; then
     echo "Package Installation with Super Root User $USERID"
     exit 1
 fi
-
+mkdir -p $LOG_FOLDER
 validate(){
 
      if [ $1 -ne 0 ]; then 
@@ -18,7 +18,7 @@ validate(){
     fi
 }
 
-cp  mongo.repo /etc/yum.repos.d/mongo.repo | tee -a $FILE_LOG
+cp  mongo.repo /etc/yum.repos.d/mongo.repo | tee -a $LOG_FILE
 validate $? "copying.."
 
 
