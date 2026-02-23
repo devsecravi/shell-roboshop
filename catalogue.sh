@@ -1,0 +1,68 @@
+USERID=$(id -u)
+LOG_FOLDER="/var/log/shell-roboshop"
+LOG_FILE="$FILE_FOLDER/$0.log"
+R="\e[31m"
+G="\e[32m"
+Y="\e[33m"
+N="\e[0m"
+
+if [ $USERID -ne 0 ]; then
+    echo "$R Package Installation with Super Root User $N  $USERID"
+    exit 1
+fi
+mkdir -p $LOG_FOLDER
+validate(){
+
+     if [ $1 -ne 0 ]; then 
+        echo "$2...$R FAILURE $N" | tee -a $LOG_FILE
+    else
+        echo "$2....$G SUCCESS $N" | tee -a $LOG_FILE
+    fi
+}
+
+dnf  module disable nodejs -y &>>$LOG_FILE
+validate $? "Disabled.." 
+
+dnf module enable nodejs:20 -y &>>$LOG_FILE
+validate $? "Disabled.." 
+dnf install nodejs -y &>>$LOG_FILE
+validate $? "Installing.." 
+
+useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+
+mkdir -p /app
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
+validate $? "Downloaded" 
+cd /app
+unzip /tmp/catalogue.zip 
+validate $? "Extrating.." 
+npm install 
+validate $? "NPM Installing.." 
+
+cp catalogue.service /etc/systemd/system/catalogue.service 
+validate $? "copying...."
+
+systemctl daemon-reload
+validate $? "reloading...."
+
+systemctl enable catalogue 
+validate $? "enable...."
+systemctl start catalogue
+validate $? "started...."
+
+cp  mongo.repo /etc/yum.repos.d/mongo.repo | tee -a $LOG_FILE
+
+dnf install mongodb-mongosh -y &>>$LOG_FILE
+validate $? "installing...."
+
+INDEX=$(mongosh --host $MONGODB_HOST --quiet  --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
+
+if [ $index -ne 0 ]; then
+   mongosh --host $MONGODB_HOST </app/db/master-data.js
+    VALIDATE $? "Loading products"
+ else
+     echo -e "Products already loaded ... $Y SKIPPING $N"
+fi
+
+systemctl restart catalogue
+VALIDATE $? "Restarting catalogue"
