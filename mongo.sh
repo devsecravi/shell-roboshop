@@ -25,7 +25,7 @@ validate(){
 cp  mongo.repo /etc/yum.repos.d/mongo.repo | tee -a $LOG_FILE
 validate $? "copying.."
 
-dnf nstall mongodb-org -y &>>$LOG_FILE
+dnf install mongodb-org -y &>>$LOG_FILE
 validate $? "Installing Package.." | tee -a $LOG_FILE
 
 systemctl enable mongod &>>$LOG_FILE
