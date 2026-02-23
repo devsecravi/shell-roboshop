@@ -22,12 +22,12 @@ validate(){
 }
 
 dnf  module disable nodejs -y &>>$LOG_FILE
-validate $? "Disabled.." 
+validate $? "disabled" 
 
 dnf module enable nodejs:20 -y &>>$LOG_FILE
 validate $? "enable.." 
 dnf install nodejs -y &>>$LOG_FILE
-validate $? "Installing.." 
+validate $? "Installing" 
 
 id roboshop &>>$LOGS_FILE
 if [ $? -ne 0 ]; then
@@ -49,23 +49,23 @@ unzip /tmp/catalogue.zip
 validate $? "Uzip catalogue code"
 
 npm install &>>$LOG_FILE
-validate $? "Installing dependencies.." 
+validate $? "Installing dependencies" 
 
 cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service 
-validate $? "copying...."
+validate $? "copying"
 
 systemctl daemon-reload
-validate $? "reloading...."
+validate $? "reloading"
 
 systemctl enable catalogue 
-validate $? "enable...."
+validate $? "enable"
 systemctl start catalogue
-validate $? "started...."
+validate $? "started"
 
 cp  $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo | tee -a $LOG_FILE
 
 dnf install mongodb-mongosh -y &>>$LOG_FILE
-validate $? "installing...."
+validate $? "installing"
 
 INDEX=$(mongosh --host $MONGODB_HOST --quiet  --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
 
