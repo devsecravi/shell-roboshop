@@ -35,12 +35,12 @@ mkdir -p /app
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
 validate $? "Downloaded" 
 cd /app
-VALIDATE $? "Moving to app directory"
+validate $? "Moving to app directory"
 rm -rf /app/*
-VALIDATE $? "Removing existing code"
+validate $? "Removing existing code"
 
 unzip /tmp/catalogue.zip 
-VALIDATE $? "Uzip catalogue code"
+validate $? "Uzip catalogue code"
 
 npm install &>>$LOG_FILE
 validate $? "Installing dependencies.." 
@@ -71,4 +71,4 @@ if [ $index -ne 0 ]; then
 fi
 
 systemctl restart catalogue
-VALIDATE $? "Restarting catalogue"
+validate $? "Restarting catalogue"
