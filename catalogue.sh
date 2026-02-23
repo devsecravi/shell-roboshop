@@ -1,6 +1,7 @@
 USERID=$(id -u)
 LOG_FOLDER="/var/log/shell-roboshop"
 LOG_FILE="$FILE_FOLDER/$0.log"
+SCRIPT_DIR=$PWD
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -24,22 +25,27 @@ dnf  module disable nodejs -y &>>$LOG_FILE
 validate $? "Disabled.." 
 
 dnf module enable nodejs:20 -y &>>$LOG_FILE
-validate $? "Disabled.." 
+validate $? "enable.." 
 dnf install nodejs -y &>>$LOG_FILE
 validate $? "Installing.." 
 
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
 
 mkdir -p /app
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
 validate $? "Downloaded" 
 cd /app
-unzip /tmp/catalogue.zip 
-validate $? "Extrating.." 
-npm install 
-validate $? "NPM Installing.." 
+VALIDATE $? "Moving to app directory"
+rm -rf /app/*
+VALIDATE $? "Removing existing code"
 
-cp catalogue.service /etc/systemd/system/catalogue.service 
+unzip /tmp/catalogue.zip 
+VALIDATE $? "Uzip catalogue code"
+
+npm install &>>$LOG_FILE
+validate $? "Installing dependencies.." 
+
+cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service 
 validate $? "copying...."
 
 systemctl daemon-reload
@@ -50,7 +56,7 @@ validate $? "enable...."
 systemctl start catalogue
 validate $? "started...."
 
-cp  mongo.repo /etc/yum.repos.d/mongo.repo | tee -a $LOG_FILE
+cp  $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo | tee -a $LOG_FILE
 
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 validate $? "installing...."
