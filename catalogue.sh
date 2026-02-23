@@ -15,9 +15,9 @@ mkdir -p $LOG_FOLDER
 validate(){
 
      if [ $1 -ne 0 ]; then 
-        echo "$2  $R...FAILURE $N" | tee -a $LOG_FILE
+        echo "$2  $R ...FAILURE $N " | tee -a $LOG_FILE
     else
-        echo "$2  $G....SUCCESS $N" | tee -a $LOG_FILE
+        echo "$2  $G ....SUCCESS $N " | tee -a $LOG_FILE
     fi
 }
 
@@ -29,7 +29,13 @@ validate $? "enable.."
 dnf install nodejs -y &>>$LOG_FILE
 validate $? "Installing.." 
 
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
+id roboshop &>>$LOGS_FILE
+if [ $? -ne 0 ]; then
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOGS_FILE
+    validate $? "Creating system user"
+else
+    echo -e "Roboshop user already exist ... $Y SKIPPING $N"
+fi
 
 mkdir -p /app
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
