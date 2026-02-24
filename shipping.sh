@@ -2,6 +2,7 @@ USERID=$(id -u)
 LOG_FOLDER="/var/log/shell-script"
 LOG_FILE="$LOG_FOLDER/$0.log"
 SCRIPT_DIR=$PWD
+MYSQL=mysql.dsecops88.online
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -56,6 +57,33 @@ validate $? "Uzipped catalogue code"
 mvn clean package &>>$LOG_FILE
 validate $? "cleane and packaged"
 
-mv target/shipping-1.0.jar shipping.jar 
+mv target/shipping-1.0.jar shipping.jar  &>>$LOG_FILE
 validate $? "Moving target to app directory"
 
+cp $SCRIPT_DIR/shipping.service  /etc/systemd/system/shipping.service  &>>$LOG_FILE
+validate $? "moved shipping.service to etc directory"
+
+systemctl daemon-reload &>>$LOG_FILE
+validate $? "reloaded system"
+
+systemctl enable shipping  &>>$LOG_FILE
+validate $? "enabled shipping"
+
+systemctl start shipping  &>>$LOG_FILE
+validate $? "started shipping"
+
+dnf install mysql -y  &>>$LOG_FILE
+validate $? "installed mysql"
+
+mysql -h $MYSQL -uroot -pRoboShop@1 < /app/db/schema.sql   &>>$LOG_FILE
+validate $? "mysql setup password"
+
+mysql -h $MYSQL -uroot -pRoboShop@1 < /app/db/app-user.sql    &>>$LOG_FILE
+validate $? "mysql setup password"
+
+
+mysql -h $MYSQL -uroot -pRoboShop@1 < /app/db/master-data.sql  &>>$LOG_FILE
+validate $? "mysql setup password"
+
+systemctl restart shipping   &>>$LOG_FILE
+validate $? "restarted shipping"
