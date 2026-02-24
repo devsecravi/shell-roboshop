@@ -14,7 +14,7 @@ if [ $USERID -ne 0 ]; then
     exit 1
 fi
 
-mkdir -p $LOG_FOLDER &>>$LOG_FILE
+mkdir -p $LOG_FOLDER
 
 validate(){
 
