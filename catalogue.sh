@@ -63,7 +63,7 @@ validate $? "Uzip catalogue code"
 npm install &>>$LOG_FILE
 validate $? "Installed The NodeJs Dependancy"
 
-cp catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
+cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
 validate $? "Created systemctl service"
 
 systemctl daemon-reload &>>$LOG_FILE
@@ -75,7 +75,7 @@ validate $? "enable system"
 systemctl start catalogue &>>$LOG_FILE
 validate $? "start system"
 
-cp mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
+cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
 validate $? "Copyied From Source to ETC" 
 
 dnf install mongodb-mongosh -y &>>$LOG_FILE
