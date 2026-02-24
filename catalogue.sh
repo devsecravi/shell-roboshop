@@ -30,7 +30,7 @@ validate(){
 dnf module disable nodejs -y  &>>$LOG_FILE
 validate $? "disable nodejs" 
 
-dnf module enable nodejs:20 -y &>>$LOG_FILE
+dnf module enable nodejs:20  -y &>>$LOG_FILE
 validate $? "enable nodejs" 
 
 dnf install nodejs -y &>>$LOG_FILE
