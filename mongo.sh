@@ -29,21 +29,21 @@ validate(){
     fi
 }
 
-cp mongo.sh /etc/yum.repos.d/mongo.repo 
-validate $? "Copyied From Source to ETC" | tee -a $LOG_FILE
+cp mongo.repo /etc/yum.repos.d/mongo.repo 
+validate $? "Copyied From Source to ETC" 
 
 dnf install mongodb-org -y &>>$LOG_FILE
-validate $? "Insatlling mongodb" | tee -a $LOG_FILE
+validate $? "Insatlling mongodb"
 
 systemctl enable mongod &>>$LOG_FILE
-validate $? "Enabled mongodb" | tee -a $LOG_FILE
+validate $? "Enabled mongodb" 
 
-systemctl start mongod &>>$LOG_FILE
-validate $? "Started mongodb" | tee -a $LOG_FILE
+systemctl start mongod 
+validate $? "Started mongodb" 
 
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
-validate $? "Allowing remote connections" | tee -a $LOG_FILE
+validate $? "Allowing remote connections" 
 
-systemctl restart mongod 
+systemctl restart mongod &>>$LOG_FILE
 validate $? "Restarted MongoDB" | tee -a $LOG_FILE
 
