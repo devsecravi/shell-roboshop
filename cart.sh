@@ -53,7 +53,7 @@ validate $? "Moving to app directory"
 rm -rf /app/* &>>$LOG_FILE
 validate $? "Removing existing code"
 
-unzip /tmp/cart.zip &>>$LOG_FILE
+unzip /tmp/cart.zip 
 validate $? "Uzipped cart code"
 
 npm install  &>>$LOG_FILE
