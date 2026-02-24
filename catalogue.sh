@@ -54,10 +54,10 @@ validate $? "downloading zip"
 cd /app 
 validate $? "Moving to app directory"
 
-rm -rf /app/*
+rm -rf /app/* &>>$LOG_FILE
 validate $? "Removing existing code"
 
-unzip /tmp/catalogue.zip
+unzip /tmp/catalogue.zip &>>$LOG_FILE
 validate $? "Uzip catalogue code"
 
 npm install &>>$LOG_FILE
