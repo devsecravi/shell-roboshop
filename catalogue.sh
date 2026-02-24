@@ -15,7 +15,7 @@ if [ $USERID -ne 0 ]; then
     exit 1
 fi
 
-mkdir -p $LOGS_FOLDER
+mkdir -p $LOG_FOLDER 
 
 validate(){
 
@@ -27,7 +27,7 @@ validate(){
     fi
 }
 
-dnf module disable nodejs  -y  &>>$LOG_FILE
+dnf module disable nodejs -y  &>>$LOG_FILE
 validate $? "disable nodejs" 
 
 dnf module enable nodejs:20 -y &>>$LOG_FILE
