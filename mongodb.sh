@@ -30,7 +30,7 @@ VALIADATE() {
 cp mongo.repo /etc/yum.repos.d/mongodb.repo
 VALIADATE $? "COPYING MONGODB REPO"
 
-dnf install mongodb-org -y &>>$LOGS_FILE
+dnf install mongodb-org -y &>> "$LOGS_FILE"
 VALIADATE $? "INSTALLING MONGODB SERVER"
 
 systemctl enable mongod &>>$LOGS_FILE
