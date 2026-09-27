@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SG_ID="sg-0a8c5f76a25f47cbe" # replace with your ID
-AMI_ID="ami-01edba92f9036f76e"
+AMI_ID="ami-0220d79f3f480ecf5"
 ZONE_ID="Z07835251RXHRH0QK4H6U"
 DOMAIN_NAME="dsecops88.online"
 
