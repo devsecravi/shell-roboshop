@@ -38,7 +38,7 @@ VALIDATE $? "Install NodeJS"
 mkdir -p /app
 VALIDATE $? "creating app directory"
 
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip  &>>$LOGS_FILE
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip  &>>$LOG_FILE
 VALIDATE $? "Downloading catalogue code"
 
 cd /app
